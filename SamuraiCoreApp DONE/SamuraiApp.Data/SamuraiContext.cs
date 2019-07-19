@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SamuraiApp.Data.Mapping;
 using SamuraiApp.Domain;
 
 namespace SamuraiApp.Data
@@ -17,32 +18,23 @@ namespace SamuraiApp.Data
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
+        public DbSet<Sword> Swords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SamuraiBattle>()
-                .HasKey(s => new { s.BattleId, s.SamuraiId });
-
-            //modelBuilder.Entity<SamuraiBattle>()
-            //    .Property(sb => sb.KillStreak);
-
-            modelBuilder.Entity<SamuraiBattle>()
-                .HasOne(sb => sb.Battle)
-                .WithMany(b => b.SamuraiBattles)
-                .HasForeignKey(sb => new { sb.BattleId });
-
-            modelBuilder.Entity<SamuraiBattle>()
-                .HasOne(sb => sb.Samurai)
-                .WithMany(s => s.SamuraiBattles)
-                .HasForeignKey(sb => new { sb.SamuraiId });
-
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .ApplyConfiguration(new SamuraiBattleMap())
+                .ApplyConfiguration(new SamuraiMap())
+                .ApplyConfiguration(new SamuraiSwordMap())
+                .ApplyConfiguration(new QuoteMap());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies().UseSqlServer(
-                 "Server=DESKTOP-MABFP66;Database=SamuraiAppDataCore;Trusted_Connection=True;");
+                 @"Server=DESKTOP-NIIG3S3\SQLEXPRESS;Database=SamuraiAppDataCore;Trusted_Connection=True;");
         }
     }
 }

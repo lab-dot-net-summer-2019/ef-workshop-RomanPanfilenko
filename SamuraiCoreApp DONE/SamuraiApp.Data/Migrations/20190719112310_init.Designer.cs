@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SamuraiApp.Data;
 
 namespace SamuraiApp.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20190719112310_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,19 +81,6 @@ namespace SamuraiApp.Data.Migrations
                     b.ToTable("SamuraiBattle");
                 });
 
-            modelBuilder.Entity("SamuraiApp.Domain.SamuraiSword", b =>
-                {
-                    b.Property<int>("SamuraiId");
-
-                    b.Property<int>("SwordId");
-
-                    b.HasKey("SamuraiId", "SwordId");
-
-                    b.HasIndex("SwordId");
-
-                    b.ToTable("SamuraiSword");
-                });
-
             modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
                 {
                     b.Property<int>("Id")
@@ -108,23 +97,6 @@ namespace SamuraiApp.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("SecretIdentity");
-                });
-
-            modelBuilder.Entity("SamuraiApp.Domain.Sword", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BlacksmithName");
-
-                    b.Property<int>("KilledEnemy");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Swords");
                 });
 
             modelBuilder.Entity("SamuraiApp.Domain.Quote", b =>
@@ -148,22 +120,9 @@ namespace SamuraiApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SamuraiApp.Domain.SamuraiSword", b =>
-                {
-                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
-                        .WithMany("SamuraiSwords")
-                        .HasForeignKey("SamuraiId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SamuraiApp.Domain.Sword", "Sword")
-                        .WithMany("SamuraiSwords")
-                        .HasForeignKey("SwordId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
                 {
-                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
+                    b.HasOne("SamuraiApp.Domain.Samurai")
                         .WithOne("SecretIdentity")
                         .HasForeignKey("SamuraiApp.Domain.SecretIdentity", "SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
